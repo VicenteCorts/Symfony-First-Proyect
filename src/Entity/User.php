@@ -9,6 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -23,15 +24,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $role = null;
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\NotBlank(message: 'El nombre no puede estar vacío')]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-z ]+$/',
+        message: 'El apellido solo puede contener letras y espacios'
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 200, nullable: true)]
+    #[Assert\NotBlank(message: 'El Apellido no puede estar vacío')]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-z ]+$/',
+        message: 'El apellido solo puede contener letras y espacios'
+    )]
     private ?string $surname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'El correo no puede estar vacío')]
+    #[Assert\EmailValidation(
+        message: 'El dominio {{ value }} no tiene un servidor de correo válido'
+    )]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'La contraseña no puede estar vacía')]
     private ?string $password = null;
 
 

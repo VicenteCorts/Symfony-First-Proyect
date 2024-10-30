@@ -26,7 +26,7 @@ class UserController extends AbstractController {
         $form->handleRequest($request);
         
         //COMPROBAR SI EL FORM SE HA EJECUTADO
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             //MODIFICANDO EL OBJETO
             
                 //Dando valor a $user->role

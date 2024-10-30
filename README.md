@@ -356,6 +356,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 ## Clase 471
 ### Validar Formulario de Registro
+Para aplicar la validación del formulario por un lado debemos añadir al if del método register lo siguinete:
+```html
+if ($form->isSubmitted() && $form->isValid()) {
+	//...
+}
+```
+Por otro lado debemos aplicar las restricciones a los diferentes atributos del objeto usuario recogido por el formulario mediante la entidad User.php:
+```hmtl
+//Añadimos un nuevo import:
+use Symfony\Component\Validator\Constraints as Assert;
+
+//Ahora añadimos las validaciones a los atributos:
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $role = null;
+
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Assert\NotBlank(message: 'El nombre no puede estar vacío')]
+    #[Assert\Regex("/[a-zA-Z ]+/")]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 200, nullable: true)]
+    #[Assert\NotBlank(message: 'El Apellido no puede estar vacío')]
+    #[Assert\Regex("/[a-zA-Z ]+/")]
+    private ?string $surname = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'El correo no puede estar vacío')]
+    #[Assert\Email(
+            message: "El email '{{ value }}' no es válido",
+            checkMX: ture
+    )]
+    private ?string $email = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'La contraseña no puede estar vacía')]
+    private ?string $password = null;
+```
+**al final hago cambios en la validación por un error SIN RESOLVER en el que no me muestra los mensajes de error en caso de meter mal los datos**
+
+## Clase 471
+### Cargar Estilos
+
+
+
+
+
+
+
+
 
 
 
