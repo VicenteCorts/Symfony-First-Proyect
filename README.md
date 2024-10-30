@@ -259,12 +259,103 @@ Y por último imprimimos el fomrulario en la vista de registro:
 
 ## Clase 470
 ### Guardar Usuario Registrado
+Dentro del método register añadiremos un nuevo bloque de código para hacer que lo que envía la request quede plasmado en el objeto que vincula al formulario:
+```html
+//IMPORTAR:
+use App\Entity\User;
+use App\Form\RegisterType;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
+use Faker\Provider\DateTime;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+//(...)
 
+    public function register(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, Request $request): Response 
+    {
+        //CREANDO FORMULARIO
+        $user = new User();
+        $form = $this->createForm(RegisterType::class, $user);
 
+        //RELLENAR EL OBJETO CON LOS DATOS DEL FORM
+        $form->handleRequest($request);
+        
+        //COMPROBAR SI EL FORM SE HA EJECUTADO
+        if ($form->isSubmitted()) {
+            //MODIFICANDO EL OBJETO
+            
+                //Dando valor a $user->role
+                $user->setRole('USER');
 
+                //Dando valor a $user->created_at
+                $user->setCreatedAt(new \DateTime('now'));
 
+                //Cifrando la Contraseña: https://www.udemy.com/course/master-en-php-sql-poo-mvc-laravel-symfony-4-wordpress/learn/lecture/12140094#questions/16641310 || https://symfony.com/doc/6.4/security/passwords.html#hashing-the-password
+                $passwordHasher = $passwordHasher->hashPassword($user, $user->getPassword());
+                $user->setPassword($passwordHasher);
+                
+		//Guardar Usuario
+                $entityManager->persist($user); //Invocar doctrine para que guarde el objeto
+                $entityManager->flush(); //Ejecutar orden para que doctrine guarde el objeto
 
+                return $this->redirectToRoute('tasks');
+        }
+           
+        return $this->render('user/register.html.twig', [
+                    'form' => $form->createView()
+        ]);       
+    }
+```
+Sin embargo hay que rellenar una serie de atributos del usuario que no vienen establecidos en la request del formulario: Role, Cifrado de Contraseña y Curtime:
+```html
+                //Dando valor a $user->role
+                $user->setRole('USER');
 
+                //Dando valor a $user->created_at
+                $user->setCreatedAt(new \DateTime('now'));
+
+                //Cifrando la Contraseña: https://www.udemy.com/course/master-en-php-sql-poo-mvc-laravel-symfony-4-wordpress/learn/lecture/12140094#questions/16641310 || https://symfony.com/doc/6.4/security/passwords.html#hashing-the-password
+                $passwordHasher = $passwordHasher->hashPassword($user, $user->getPassword());
+                $user->setPassword($passwordHasher);
+
+```
+#### Para el cifrado de la Contraseña
+En src/Entity/User.php:
+```html
+//IMPORTAR:
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+//DECLARACIÓN DE LA CLASE:
+class User implements UserInterface, PasswordAuthenticatedUserInterface
+{
+
+//Final del código:
+    public function getUsername() {
+        return $this->email;
+    }
+    public function getSalt() {
+        return null;
+    }
+    
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+ 
+        return array_unique($roles);
+    }
+    public function eraseCredentials() {
+    
+    }
+ 
+    public function getUserIdentifier(): string {
+        
+    }
+```
+
+## Clase 471
+### Validar Formulario de Registro
 
 
 
