@@ -1,6 +1,8 @@
 # Proyecto Symfony
+
 ## Clase 461
 ### Iniciando el proyecto
+
 #### Instalación de Symfony
 Yo utilizaré el siguiente comando por consola para instalar el proyecto en el que trabajaremos:
 - ~composer create-project symfony/website-skeleton 12proyecto-symfony~
@@ -62,9 +64,13 @@ CONSTRAINT fk_task_user FOREIGN KEY(user_id) REFERENCES users(id)
 
 ## Clase 464
 ### Conectar proyecto a la BBDD
+Abrimos el fichero .env y modificamos para crear la conexión con la BBDD:
+```html
+DATABASE_URL="mysql://root@127.0.0.1:3306/symfony_master?serverVersion=8.2.0&charset=utf8mb4"
+```
 
-
-
+## Clase 465
+### Generar Entidades
 
 
 
