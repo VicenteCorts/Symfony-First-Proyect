@@ -83,7 +83,27 @@ Una vez realizada la conexión con la BBDD, crearemos las entidades basándonos 
 - Con esto se modificarán las Entidades previamente creadas y la relación estará establecida. **Revisar bien**.
 
 ## Clase 466
-###
+### Relaciones ORM
+Victor Robles añade una serie de importaciones a la Entidad User ya que no realizó la relación por consola, sino que al ser una versión más antigua de Symfony permitía importar las tablas de la BBDD al proyecto. Nosotros al hacerlo en la versión 6.4 y crear las relaciones por consola ya tenemos por defecto estas dos librerías de colecciones que añade en la videoclase:
+```html
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+```
+Igualmente crea de manera manual un nuevo constructor (que nosotros hemos creado de manera auomática):
+```html
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'user')]
+    private Collection $tasks;
+
+    public function __construct()
+    {
+        $this->tasks = new ArrayCollection();
+    }
+```
+Posteriormente añade más código que parece deprecado en la clase User y Task; por el momento lo ignoramos ya que al hacerlo por consola, nuestro proceso está automatizado.
+- También crea un método para extraer todas las tareas de un usuario (también automatizado por nosotros).
+
+## Clase 467
+### 
 
 
 
