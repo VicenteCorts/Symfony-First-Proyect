@@ -71,8 +71,19 @@ DATABASE_URL="mysql://root@127.0.0.1:3306/symfony_master?serverVersion=8.2.0&cha
 
 ## Clase 465
 ### Generar Entidades
+Una vez realizada la conexión con la BBDD, crearemos las entidades basándonos en las tablas previamente creadas en la BBDD (**REPITO**, ES MÁS CONVENIENTE NO CREAR LAS TABLAS, SINO COMENZAR POR LA CREACIÓN DE ENTIDADES; YA QUE ESTAS LUEGO GENERARÁN TABLAS EN LA BBDD)
+- Nos dirigimos a la consola de comandos
+- ~php bin/console doctrine:mapping:import App\\Entity annotation --path=src/Entity~
+- Creamos las Entidades con: **php bin/console make:entity nombre**
+- Una vez creadas las entidades debemos establcer las relaciones entre ellas; en este caso en la tabla "Task" hay una foreign key (user_id) que hace referencia a la tabla "User"
+- Empleamos el mismo comando para entrar de nuevo a la tabla que nos interese que tenga la FK: **php bin/console make:entity task**
+- Creamos el nuevo atributo, con tipado **relation** 
+- A partir de aquí debemos tener claro que tipo de relación guarda y completar la información solicitada por la consola y el ORM
+- https://symfony.com/doc/6.4/doctrine/associations.html#mapping-the-manytoone-relationship
+- Con esto se modificarán las Entidades previamente creadas y la relación estará establecida. **Revisar bien**.
 
-
+## Clase 466
+###
 
 
 
