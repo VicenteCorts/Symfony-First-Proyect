@@ -429,14 +429,67 @@ body{
 
 ```
 
-## Clase 472
+## Clase 473
 ### Maquetar Formulario
 Ahora que ya tenemos el control de los Estilos, vamos a modificar el front-end del formulario creado en los apartados anteriores.
 ```hmtl
+label{
+    display:block;
+    width: 80%;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"]{
+    width: 70%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button,
+input[type="submit"]{
+    padding: 8px;
+    margin-top: 15px;
+    background-color: #8ceb87;
+    color:white;
+    border:1px solid darkgreen;
+    cursor: pointer;
+    transition: all 300ms;
+}
+
+button:hover,
+input[type="submit"]:hover{
+    background-color:darkgreen;
+}
+```
+### Maquetación Layout base
+Modificamos el archivo base.html.twig, añadiendo un bloque "header" con un menú para navegar por la web. También modificamos las rutas en config/routes.yaml para dar sentido y orden al proyecto:
+- **base.html.twig**
+```html
+    <body>
+        {% block header %}
+            <h1>Tareas Symfony</h1>
+            <ul>
+                <li><a href="{{ path('tasks') }}">Inicio</a></li>
+                <li><a href="">Mis Tareas</a></li>
+                <li><a href="">Login</a></li>
+                <li><a href="{{ path('register') }}">Registro</a></li>
+            </ul>
+        {% endblock %}
+        {% block body %}{% endblock %}
+    </body>
+```
+- **routes.yaml** -> Simple modificación del path
+```html
+tasks:
+    path: /
+    controller: App\Controller\TaskController::index
 ```
 
-
-
+## Clase 474
+### Maquetar Cabecera y Menú
 
 
 

@@ -5,7 +5,7 @@ controllers:
     type: attribute
     
 tasks:
-    path: /tasks
+    path: /
     controller: App\Controller\TaskController::index
     
 register:
