@@ -400,12 +400,40 @@ use Symfony\Component\Validator\Constraints as Assert;
 ```
 **al final hago cambios en la validación por un error SIN RESOLVER en el que no me muestra los mensajes de error en caso de meter mal los datos**
 
-## Clase 471
+## Clase 472
 ### Cargar Estilos
+Abrimos el archivo base.html.twig; que es la plantilla base de la aplicación web. Dentro de este podemos apreciar un bloque de estilos, donde podremos incluir las hojas de estilo que deseemos:
+```html
+        {% block stylesheets %}
+            <link href="{{ asset('assets/css/style.css') }}" type="text/css" rel="stylesheet" />
+        {% endblock %}
+```
+Nos dirigimos a la carpeta public y creamos: assets/css/style.css con el sigueinte contenido:
+- Sin embargo, para que funcione previamente debemos dirigirnos a la carpeta raíz assets/styles/app.css y eliminar el código de ese archivo.
+```html
+body{
+    background-color: #eb87a7;
+}
 
+.example-wrapper {
+    margin: 1em auto;
+    max-width: 800px;
+    width: 95%;
+    font: 18px/1.5 sans-serif;
+}
 
+.example-wrapper code {
+    background: #F5F5F5;
+    padding: 2px 6px;
+}
 
+```
 
+## Clase 472
+### Maquetar Formulario
+Ahora que ya tenemos el control de los Estilos, vamos a modificar el front-end del formulario creado en los apartados anteriores.
+```hmtl
+```
 
 
 
