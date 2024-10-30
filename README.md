@@ -193,6 +193,74 @@ use App\Entity\User;
 
 ## Clase 469
 ### Registro de Usuarios
+Cambiamos el método index-> register del UserController y la plantilla que se generó de manera automática index.html.twig->register.hmtl.twig para crear un formulario de Registro.
+- Nos creamos una ruta para esta nueva acción "register":
+```html
+registro:
+    path: /register
+    controller: App\Controller\UserController::register
+```
+Creamos una carpeta "Form" dentro de src y dentro de esta un archivo RegisterType.php en el que crearemos el formulario:
+```html
+<?php
+namespace App\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+
+class RegisterType extends AbstractType{
+    
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
+        $builder-> add('name', TextType::class, array(
+            'label' => 'Nombre'
+        ))
+                -> add('surname', TextType::class, array(
+            'label' => 'Apellidos'
+        ))
+                -> add('email', EmailType::class, array(
+            'label' => 'Correo electrónico'
+        ))
+                -> add('password', PasswordType::class, array(
+            'label' => 'Contraseña'
+        ))
+                -> add('submit', SubmitType::class, array(
+            'label' => 'Registrarse'
+        ));
+    }
+}
+```
+Ahora debemos hacer uso de este formulario en la acción del controlador:
+```html
+//Cargamos estos dos elementos
+use App\Entity\User;
+use App\Form\RegisterType;
+use Symfony\Component\HttpFoundation\Request;
+
+//dentro del método register
+    public function register(Request $request): Response
+    {
+        $user = new User();
+        $form = $this->createForm(RegisterType::class , $user);
+        return $this->render('user/register.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+```
+Y por último imprimimos el fomrulario en la vista de registro:
+```html
+{{ form_start(form) }}
+{{ form_widget(form)}}
+{{ form_end(form)}}
+```
+
+## Clase 470
+### Guardar Usuario Registrado
+
+
 
 
 
