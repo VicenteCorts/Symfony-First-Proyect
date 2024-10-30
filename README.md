@@ -26,6 +26,13 @@ git push -u origin main
 ```
 Por último añadimos opcionalmente un README.md y creamos un nuevo commit.
 
+## EXTRA
+### Apache
+Para hacer que la aplicación web funcione correctamente en servidores virtuales apache debemos instalar el paquete apache, para ello empleamos el siguiente comando por consola:
+```html
+composer require symfony/apache-pack
+```
+
 ## Clase 462
 ### Diseñar la BBDD
 Será un proyecto de Gestión de Tareas. En la videoclase Victor hace el mapa visual de la estructura que tendrá la BBDD en el programa **"DIA"**.
@@ -112,13 +119,80 @@ Creamos una serie de INSERTS en el fichero database.sql previamente creado por n
 
 ## Clase 468
 ### Probando las Entidades Relacionales
+Comenzaremos creando un nuevo Controlador por consola para la Entidad Task y User
+```html
+php bin/console make:controller UserController
+php bin/console make:controller TaskController
+```
+Ahora que vamos a dirigirnos a diferentes rutas de la aplicación web debemos cerciorarnos de que **el apache pack esta instalado**
+```html
+composer require symfony/apache-pack
+```
+### Rutas
+Opcionalmente podemos crear una ruta en routes.yaml, aunque las creadas por anotaciones en el controlador por defecto también funcionan correctamente:
+```html
+tasks:
+    path: /tasks
+    controller: App\Controller\TaskController::index
+```
+### Primera prueba: Mostrar Task(s)
+Nos dirigiremos al TaskController para modificarlo.
+- Primero importaremos una serie de use(s):
+```html
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Task;
+```
+- Luego añadiremos el Entity manager como parámetro del método index y crearemos un bloque de código para mostrar las tareas de la BBDD:
+```html
+    public function index(EntityManagerInterface $entityManager): Response
+    {
+        //Prueba de Entidades y relaciones
+        $task_repo = $entityManager->getRepository(Task::class);
+        $tasks = $task_repo->findAll();
+        
+        foreach($tasks as $task){
+            echo $task->getTitle()."<br/>";
+        }
+        
+        return $this->render('task/index.html.twig', [
+            'controller_name' => 'TaskController',
+        ]);
+    }
+```
+- Ahora mostraremos el nombre dle usuario que ha creado la tarea al lado de cada tarea; para ver si están correctamente relacionadas ambas tablas:
+```html
+        foreach($tasks as $task){
+            echo $task->getUser()->getName().": ".$task->getTitle()."<br/>";
+        }
+```
+### Segunda prueba: Mostrar Todos los usuarios de la BBDD y luego sacar las tareas asociadas a cada usuario:
+```html
+use App\Entity\User;
+(...)
 
+    public function index(EntityManagerInterface $entityManager): Response
+    {
+ 	//Segunda Prueba de Entidades y relaciones
+        $user_repo = $entityManager->getRepository(User::class);
+        $users = $user_repo->findAll();
+        
+        foreach ($users as $user) {
+            echo "<h1>{$user->getName()} {$user->getSurname()}</h1>";
 
+            foreach ($user->getTasks() as $task) {
+                echo $task->getTitle() . "<br/>";
+            }
 
+        }
 
+        return $this->render('task/index.html.twig', [
+                    'controller_name' => 'TaskController',
+        ]);
+    }
+```
 
-
-
+## Clase 469
+### Registro de Usuarios
 
 
 
