@@ -103,7 +103,25 @@ Posteriormente añade más código que parece deprecado en la clase User y Task;
 - También crea un método para extraer todas las tareas de un usuario (también automatizado por nosotros).
 
 ## Clase 467
-### 
+### Rellenar la BBDD
+Primero haremos una migración: 
+- **php bin/console make:migration** 
+- y posteriormente la ejecutamos **php bin/console doctrine:migrations:migrate**
+- TODO OK.
+Creamos una serie de INSERTS en el fichero database.sql previamente creado por nosotros y los añadimos a la BBDD mediante phpmyadmin.
+
+## Clase 468
+### Probando las Entidades Relacionales
+
+
+
+
+
+
+
+
+
+
 
 
 
