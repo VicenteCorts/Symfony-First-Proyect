@@ -490,11 +490,10 @@ tasks:
 
 ## Clase 474
 ### Maquetar Cabecera y Menú
+(Simplemente se aplican estilos generales a la template base, al menú y a la cabecera)
 
-
-
-
-
+## Clase 475
+### Login de Usuarios
 
 
 
