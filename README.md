@@ -495,6 +495,7 @@ tasks:
 ## Clase 475
 ### Login de Usuarios
 En Symfony el sistema d eLogin viene predetemrinado, muy seguro y facil de implementar a falta de una serie de configuraciones.
+- https://www.youtube.com/watch?v=cRCZyU3nUL8&ab_channel=dfbastidas (TAMBIÉN ES DE UTILIDAD)
 - En primer lugar, debemos haber importado el UserInterface en nuestra entidad User.php (cosa que se hizo en clases anteriores).
 ```html
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -649,6 +650,48 @@ logout:
 
 ## Clase 476
 ### Logout (Cerrar sesión)
+En primer lugar haremos modificaciones en el menú en base.html.twig en fucnción de si estamos logueados o no como usuario (role USER)
+```html
+    <body>
+        {% block header %}
+            <div class="header">
+                <h1>Tareas Symfony</h1>
+                <ul id="menu">
+                        {% if app.user %}
+                        <li><a href="{{ path('tasks') }}">Inicio</a></li>
+                        <li><a href="">Mis Tareas</a></li>
+                        <li class="right"><a href="">{{ app.user.name ~' '~ app.user.surname}}</a></li>
+                        <li class="right"><a href="{{ path('logout') }}">Cerrar Sesión</a></li>
+                        {% else %}
+                        <li><a href="{{ path('login') }}">Login</a></li>
+                        <li><a href="{{ path('register') }}">Registro</a></li>
+                        {% endif %}
+                </ul>
+            </div>
+            <div class="clearfix"></div>
+        {% endblock %}
+        {% block body %}{% endblock %}
+    </body>
+```
+- Añadirmos un par de línas de css para flotar la mitad del menú a la derecha:
+```html
+#menu li.right{
+    float: right;
+    border-right: 0px;
+    border-left: 1px solid #ccc;
+}
+```
+
+## Clase 477
+### Listado de Tareas (en la pag Inicio -Tasks-)
+
+
+
+
+
+
+
+
 
 
 

@@ -13,10 +13,10 @@
         </div>
     {% endif %}
     
-{#    Mostrar datos del usuario registrado en caso de logearse #}
+{#    Mostrar datos del usuario registrado en caso de logearse 
     {% if app.user %}
         {{ dump(app.user) }}
-    {% endif %}
+    {% endif %}#}
         
     <form action="{{ path('login') }}" method="POST">
 {#        Los elementos _username y _password son palabras reservadas para login en Symfony#}

@@ -14,18 +14,16 @@ class TaskController extends AbstractController {
     #[Route('/task', name: 'app_task')]
     public function index(EntityManagerInterface $entityManager): Response {
 
-//Primera Prueba de Entidades y relaciones
+//Primera Prueba de Entidades y relaciones       
+//       $task_repo = $entityManager->getRepository(Task::class);
+//            $tasks = $task_repo->findAll();
+//        
+//            foreach($tasks as $task){
+//                echo $task->getUser()->getName().": ".$task->getTitle()."<br/>";
+//            }
+
         
-/*        $task_repo = $entityManager->getRepository(Task::class);
-            $tasks = $task_repo->findAll();
-        
-            foreach($tasks as $task){
-                echo $task->getUser()->getName().": ".$task->getTitle()."<br/>";
-            }
- */
-        
-//Segunda Prueba de Entidades y relaciones
-        
+//Segunda Prueba de Entidades y relaciones       
 //        $user_repo = $entityManager->getRepository(User::class);
 //        $users = $user_repo->findAll();
 //
@@ -36,8 +34,11 @@ class TaskController extends AbstractController {
 //            }
 //        }
 //
-//        return $this->render('task/index.html.twig', [
-//                    'controller_name' => 'TaskController',
-//        ]);
+        return $this->render('task/index.html.twig', [
+                    'controller_name' => 'TaskController',
+        ]);
+        
+        
+        
     }
 }
