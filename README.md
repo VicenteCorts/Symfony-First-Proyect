@@ -684,10 +684,61 @@ En primer lugar haremos modificaciones en el menú en base.html.twig en fucnció
 
 ## Clase 477
 ### Listado de Tareas (en la pag Inicio -Tasks-)
+Elaboraremos una tabla para listar las Tareas de la aplicación, para ello modifcamos el index.html.twig:
+```html
+        <table>
+            <tr>
+                <th>Tarea</th>
+                <th>Prioridad</th>
+                <th>Horas aprox.</th>
+                <th>Acciones</th>
+            </tr>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.priority }}</td>
+                    <td>{{ task.hours }}</td>
+                    <td> ACCIONES </td>
+                </tr>
+            {% endfor %}
+        </table>
+-----------------------------------------
+//Estilos
 
+table{
+    width: 100%;
+}
 
+table th,
+table td{
+    background: #f5c6cb;
+    padding: 15px;
+    padding-right: 25px;
+    padding-left: 25px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
 
+table td{
+    background: #fce6e2;
+}
 
+```
+- Tras esto, nos dirigimos a TaskController para crear un método para extraer toda la info de la BBDD:
+```html
+    public function index(EntityManagerInterface $entityManager): Response {
+
+        $task_repo = $entityManager->getRepository(Task::class);
+        $tasks = $task_repo->findBy([],['id' => 'DESC']);
+
+        return $this->render('task/index.html.twig', [
+                    'tasks' => $tasks,
+        ]);   
+    }
+```
+
+## Clase 478
+### Mejoras para el listado
 
 
 

@@ -21,7 +21,6 @@ class TaskController extends AbstractController {
 //            foreach($tasks as $task){
 //                echo $task->getUser()->getName().": ".$task->getTitle()."<br/>";
 //            }
-
         
 //Segunda Prueba de Entidades y relaciones       
 //        $user_repo = $entityManager->getRepository(User::class);
@@ -33,12 +32,11 @@ class TaskController extends AbstractController {
 //                echo $task->getTitle() . "<br/>";
 //            }
 //        }
-//
+
+        $task_repo = $entityManager->getRepository(Task::class);
+        $tasks = $task_repo->findBy([],['id' => 'DESC']);
         return $this->render('task/index.html.twig', [
-                    'controller_name' => 'TaskController',
-        ]);
-        
-        
-        
+                    'tasks' => $tasks,
+        ]);   
     }
 }
