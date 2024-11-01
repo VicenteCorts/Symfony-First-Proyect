@@ -739,8 +739,53 @@ table td{
 
 ## Clase 478
 ### Mejoras para el listado
+Vamos a hacer una condicional para convertir los textos en inglés de las prioridades a español, mediante un if dentro del "td" de "task.priority" en index.html.twig:
+```html
+<td>
+	{% if task.priority == 'High' %}
+		{{ 'Alta' }}
+	{% endif %}
+	{% if task.priority == 'Medium' %}
+		{{ 'Media' }}
+	{% endif %}
+	{% if task.priority == 'Low' %}
+		{{ 'Baja' }}
+	{% endif %}
+</td>
+```
+Ahora añadiremos una serie de botones para la columna de Acciones:
+```html
+<td class="buttons"> 
+	<a href="" class="see">Ver</a>
+	<a href="" class="edit">Editar</a>
+	<a href="" class="delete">Borrar</a>
+</td>
+----------------------------------------
+//Estilos:
 
+.buttons a{
+    text-decoration: none;
+    border: 1px solid #444;
+    padding: 10px;
+    color: white;
+    background: #8ceb87;
+}
 
+.buttons .see{
+    background: #8ceb87;
+}
+
+.buttons .edit{
+    background: #007bff;
+}
+
+.buttons .delete{
+    background: #a71d2a;
+}
+```
+
+## Clase 479
+### Botón "Ver"
 
 
 
