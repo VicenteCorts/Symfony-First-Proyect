@@ -494,6 +494,165 @@ tasks:
 
 ## Clase 475
 ### Login de Usuarios
+En Symfony el sistema d eLogin viene predetemrinado, muy seguro y facil de implementar a falta de una serie de configuraciones.
+- En primer lugar, debemos haber importado el UserInterface en nuestra entidad User.php (cosa que se hizo en clases anteriores).
+```html
+use Symfony\Component\Security\Core\User\UserInterface;
+//...
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
+{
+    //...
+
+    //FUNCIONES PARA AUTENTICACIÓN
+    public function getUsername() {
+        return $this->email;
+    }
+    public function getSalt() {
+        return null;
+    }
+    
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has USER
+        $roles[] = 'USER';
+ 
+        return array_unique($roles);
+    }
+    public function eraseCredentials() {
+    
+    }
+ 
+    public function getUserIdentifier(): string {
+        
+    }
+}
+```
+- Luego en el fichero config/packages/security.yaml debemos añadir en el apartado de security:firewalls:main:
+```html
+        main:
+            lazy: true
+            provider: users_in_memory
+            form_login:
+                login_path: login
+                check_path: login
+                provider: proveedor
+                
+            logout:
+                path: /logout
+                target: /login
+```
+- Luego debemos crear un **provider** en este mismo archivo
+```html
+    providers:
+        users_in_memory: { memory: null }
+        proveedor:
+            entity:
+                class: App\Entity\User
+                property: email
+```
+- Luego modificaremos el acces_control en este mismo archivo (más adelante) para crear diferenciación entre acceso de user o de admin
+- Ahora vamos al controlador de Usuario y añadimos un nuevo método:
+```html
+//Autenticación -> método login
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
+	//...
+
+    public function login (AuthenticationUtils $autenticationUtils) {
+       $error = $autenticationUtils->getLastAuthenticationError();
+       $lastUsername = $autenticationUtils->getLastUsername();
+       
+       return $this->render('user/login.html.twig', array(
+           'error' => $error,
+           'last_username' => $lastUsername
+       ));
+    }
+```
+- Creamos la ruta para dicho método:
+```html
+login:
+    path: /login
+    controller: App\Controller\UserController::login
+
+logout:
+    path: /logout
+```
+- A continuación creamos la vista del formulario de login asociada a estas rutas y métodos anteriores: templates/user/login.html.twig
+```html
+{% extends 'base.html.twig' %}
+
+{% block title %}Login de usuarios{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h2>Login de Usuarios</h2>
+    
+    {% if error %}
+        <div class="alert alert-error">
+            {{ error.messagekey|trans(error.messageData, 'security') }} {# Para mostrar los errores del fomrulario de LOGIN #}
+        </div>
+    {% endif %}
+    
+    {#    Mostrar datos del usuario registrado en caso de logearse #}
+    {% if app.user %}
+        {{ dump(app.user) }}
+    {% endif %}
+        
+    <form action="{{ path('login') }}" method="POST">
+{#        Los elementos _username y _password son palabras reservadas para login en Symfony#}
+        <label for="username">Email</label>
+        <input type="email" id="username" name="_username" value="{{ last_username }}"/>
+        
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" name="_password"/>
+        
+        <div class="clearfix"></div>
+        
+        <input type="submit" value="Entrar"/>
+    </form>
+        
+</div>
+{% endblock %}
+```
+- Añadimos el link de login a base.html.twig:
+```html
+<li><a href="{{ path('login') }}">Login</a></li>
+```
+- **He tenido que hacer cambios en User.php debido a un fallo con el método getRoles**
+```html
+    public function getRoles(): array
+    {
+//        $roles = $this->roles;
+//        // guarantee every user at least has USER
+//        $roles[] = 'USER';
+// 
+//        return array_unique($roles);
+            
+    // Convierte el rol único a un array de roles
+    $roles = ['ROLE_USER']; // Rol por defecto
+    
+    if ($this->role) {
+        // Convierte el rol a mayúsculas y con el prefijo ROLE_
+        $roles[] = 'ROLE_' . strtoupper($this->role);
+    }
+```
+- **He tenido que hacer cambios en User.php debido a un fallo con el método getUserIdentifier()**
+```html
+    public function getUserIdentifier(): string {
+	//Estaba vacío
+        return $this->email;
+    }
+```
+
+## Clase 476
+### Logout (Cerrar sesión)
+
+
+
+
 
 
 

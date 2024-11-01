@@ -13,6 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Faker\Provider\DateTime;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+//Autenticación -> método login
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+
 class UserController extends AbstractController {
 
     #[Route('/user', name: 'app_user')]
@@ -49,5 +52,15 @@ class UserController extends AbstractController {
         return $this->render('user/register.html.twig', [
                     'form' => $form->createView()
         ]);       
+    }
+    
+    public function login (AuthenticationUtils $autenticationUtils) {
+       $error = $autenticationUtils->getLastAuthenticationError();
+       $lastUsername = $autenticationUtils->getLastUsername();
+       
+       return $this->render('user/login.html.twig', array(
+           'error' => $error,
+           'last_username' => $lastUsername
+       ));
     }
 }
