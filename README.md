@@ -1024,4 +1024,34 @@ Si aparece el menú inferior de symfony server puede clicarse para ver los eleme
 
 ## Clase 482
 ### Mejorar Estilos
+Para solucionar el error de los botones solapados al escribir títulos muy largos para las tareas creadas bastará con añadir este código al css:
+```html
+.buttons{
+    width: 33%;
+}
+```
+
+## Clase 483
+### 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
