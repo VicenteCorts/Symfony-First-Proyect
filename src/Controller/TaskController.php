@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Task;
 use App\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
 
 class TaskController extends AbstractController {
 
@@ -47,6 +48,12 @@ class TaskController extends AbstractController {
         
         return $this->render('task/detail.html.twig',[
             'task' => $task
+        ]);
+    }
+    
+    public function creation(Request $request) {
+        return $this->render('task/creation.html.twig', [
+            
         ]);
     }
 }

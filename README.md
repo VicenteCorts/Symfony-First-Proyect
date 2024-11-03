@@ -841,8 +841,47 @@ Añadimos en index.html.twig el enlace para ver los detalles de la tarea selecci
 
 ## Clase 480
 ### Método Crear Tarea
+Comenzamos por añadir un enlace en el menú de base.html.twig para crear tareas:
+```html
+<li><a href="">Crear Tarea</a></li>
+```
+Creamos el método "creation" dentro de TaskController para redirigir al formulariod e creación de Tarea:
+```html
+use Symfony\Component\HttpFoundation\Request;
 
+//...
 
+    public function creation(Request $request) {
+        return $this->render('task/creation.html.twig');
+    }
+```
+Creamos la ruta correspondiente:
+```html
+task_creation:
+    path: /crear-tarea
+    controller: App\Controller\TaskController::creation
+```
+Añadimos el href correspondiente en base.html.twig:
+```html
+<li><a href="{{ path('task_creation') }}">Crear Tarea</a></li>
+```
+Creamos la vista asociada (basica para comprobar que funciona, luego se ampliará)
+```html
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear Tarea{% endblock %}
+
+{% block body %}
+
+    <div class="example-wrapper">
+        <h2>Crear Tarea</h2>
+        
+    </div>
+{% endblock %}
+```
+
+## Clase 481
+### Formulario para Crear Tarea
 
 
 

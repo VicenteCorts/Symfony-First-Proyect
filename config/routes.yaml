@@ -10,7 +10,11 @@ tasks:
     
 task_detail:
     path: /tarea/{id}
-    controller: App\Controller\TaskController::detail 
+    controller: App\Controller\TaskController::detail
+    
+task_creation:
+    path: /crear-tarea
+    controller: App\Controller\TaskController::creation
     
 register:
     path: /registro
