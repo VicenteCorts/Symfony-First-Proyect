@@ -1017,5 +1017,11 @@ En el Formulario todavia tenemos que añadir valores a los atributos createdAt y
     }
 ```
 
+## VarDumper
+### dump($task);
+Si aparece el menú inferior de symfony server puede clicarse para ver los elementos en Post que han surgido de hacer el submit en el formulario
+- Sino, se puede acceder escribiendo en la url: **http://localhost:8000/_profiler** y navegando un poco
 
+## Clase 482
+### Mejorar Estilos
 
