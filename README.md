@@ -785,13 +785,62 @@ Ahora añadiremos una serie de botones para la columna de Acciones:
 ```
 
 ## Clase 479
-### Botón "Ver"
+### Botón "Ver" 
+Añadimos un nuevo método "detail" al TaskController 
+- Le pasamos el parámetro Task $task, para que tenga acceso al objeto completo
+```html
+    public function detail(Task $task) {
+        if(!$task){
+            return $this->redirectToRoute('tasks');
+        }
+        
+        return $this->render('task/detail.html.twig',[
+            'task' => $task
+        ]);
+    }
+```
+Creamos la ruta a la que nos dirige este método:
+```html
+task_detail:
+    path: /tarea/{id}
+    controller: App\Controller\TaskController::detail 
+```
+Y por último creamos la vista correspondiente:
+```html
+{% extends 'base.html.twig' %}
 
+{% block title %}Todas las Tareas{% endblock %}
 
+{% block body %}
 
+    <div class="example-wrapper">
+        <h2>{{ task.title }}</h2>
+        <p class="data-task">
+            {{ task.user.name }} 
+            {{ task.user.name }} 
+            || Creado: {{ task.createdAt|date('d/m/Y (h:i)') }} 
+            || Prioridad: {% if task.priority == 'High' %}
+                            {{ 'Alta' }}
+                            {% endif %}
+                            {% if task.priority == 'Medium' %}
+                                {{ 'Media' }}
+                            {% endif %}
+                            {% if task.priority == 'Low' %}
+                                {{ 'Baja' }}
+                            {% endif %}
+            || Horas: {{ task.hours }}
+        </p>
+        <p>{{ task.content }}</p>
+    </div>
+{% endblock %}
+```
+Añadimos en index.html.twig el enlace para ver los detalles de la tarea seleccionada
+```html
+<a href="{{ path('task_detail', {'id':task.id}) }}" class="see">Ver</a>
+```
 
-
-
+## Clase 480
+### Método Crear Tarea
 
 
 
