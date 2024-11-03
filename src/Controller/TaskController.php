@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Task;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
+use App\Form\TaskType;
 
 class TaskController extends AbstractController {
 
@@ -51,9 +52,37 @@ class TaskController extends AbstractController {
         ]);
     }
     
-    public function creation(Request $request) {
-        return $this->render('task/creation.html.twig', [
+    public function creation(EntityManagerInterface $entityManager, Request $request, \Symfony\Component\Security\Core\User\UserInterface $user): Response  {
+        
+        //CREANDO EL FORMULARIO
+        $task = new Task();
+        $form = $this->createForm(TaskType::class, $task);
+        
+        //RELLENAR EL OBJETO CON LOS DATOS DEL FORM
+        $form->handleRequest($request);
+        
+        //COMPROBAR SI EL FORM SE HA EJECUTADO
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($task);
+            dump($user);
             
+            //MODIFICANDO EL OBJETO
+            
+            //Dando valor al user
+            $task->setUser($user);
+            
+            //Dando valor a $task->created_at
+            $task->setCreatedAt(new \DateTime('now'));
+
+            //Guardar la Tarea
+            $entityManager->persist($task); //Invocar doctrine para que guarde el objeto
+            $entityManager->flush(); //Ejecutar orden para que doctrine guarde el objeto
+
+            return $this->redirect($this->generateUrl('task_detail', ['id' => $task->getId()]));
+        }
+        
+        return $this->render('task/creation.html.twig', [
+                    'form' => $form->createView(),
         ]);
     }
 }

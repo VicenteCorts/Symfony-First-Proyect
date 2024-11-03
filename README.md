@@ -882,10 +882,140 @@ Creamos la vista asociada (basica para comprobar que funciona, luego se ampliar�
 
 ## Clase 481
 ### Formulario para Crear Tarea
+- Tomamos el RegisterType de la carpeta src/Form y lo copiamos y renombramos a "TaskType"
+- A continuación lo editamos en fucnión de su labor:
+```html
+<?php
+namespace App\Form;
 
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
+class TaskType extends AbstractType{
+    
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
+        $builder-> add('title', TextType::class, array(
+            'label' => 'Título'
+        ))
+                -> add('content', TextAreaType::class, array(
+            'label' => 'Contenido'
+        ))
+                -> add('priority', ChoiceType::class, array(
+            'label' => 'Prioridad',
+            'choices' => array(
+                'Alta' => 'high',
+                'Media' => 'medium',
+                'Baja' => 'low',
+            )
+        ))
+                -> add('hours', TextType::class, array(
+            'label' => 'Horas Presupuestadas'
+        ))
+                -> add('submit', SubmitType::class, array(
+            'label' => 'Crear Tarea'
+        ));
+    }
+```
+Ahora lo usaremos dentro del método del controlador, importando previamente el objeto Task y el TaskType recien creado
+```html
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Task;
+use App\Entity\User;
+use Symfony\Component\HttpFoundation\Request;
+use App\Form\TaskType;
 
+//... 
 
+    public function creation(EntityManagerInterface $entityManager, Request $request): Response  {
+        
+        //CREANDO EL FORMULARIO
+        $task = new Task();
+        $form = $this->createForm(TaskType::class, $task);
+        
+        //RELLENAR EL OBJETO CON LOS DATOS DEL FORM
+        $form->handleRequest($request);
+        
+        //COMPROBAR SI EL FORM SE HA EJECUTADO
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+        }
+        
+        return $this->render('task/creation.html.twig', [
+                    'form' => $form->createView()
+        ]);
+    }
+```
+Imprimimos el Formulario en creation.html.twig:
+```html
+{% extends 'base.html.twig' %}
+
+{% block title %}Crear Tarea{% endblock %}
+
+{% block body %}
+
+    <div class="example-wrapper">
+        <h2>Crear Tarea</h2>
+        {{ form_start(form) }}
+        {{ form_widget(form)}}
+        {{ form_end(form)}}
+    </div>
+{% endblock %}
+```
+Hacemos asjutes en css
+```html
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select{
+    width: 70%;
+    padding: 10px;
+    font-size: 16px;
+}
+```
+En el Formulario todavia tenemos que añadir valores a los atributos createdAt y UserId para ello: añadimos por parámetro UserInterface y modificamos el códgio:
+```html
+    public function creation(EntityManagerInterface $entityManager, Request $request, \Symfony\Component\Security\Core\User\UserInterface $user): Response  {
+        
+        //CREANDO EL FORMULARIO
+        $task = new Task();
+        $form = $this->createForm(TaskType::class, $task);
+        
+        //RELLENAR EL OBJETO CON LOS DATOS DEL FORM
+        $form->handleRequest($request);
+        
+        //COMPROBAR SI EL FORM SE HA EJECUTADO
+        if ($form->isSubmitted() && $form->isValid()) {
+            dump($task);
+            dump($user);
+            
+            //MODIFICANDO EL OBJETO
+            
+            //Dando valor al user
+            $task->setUser($user);
+            
+            //Dando valor a $task->created_at
+            $task->setCreatedAt(new \DateTime('now'));
+
+            //Guardar la Tarea
+            $entityManager->persist($task); //Invocar doctrine para que guarde el objeto
+            $entityManager->flush(); //Ejecutar orden para que doctrine guarde el objeto
+
+            return $this->redirect($this->generateUrl('task_detail', ['id' => $task->getId()]));
+        }
+        
+        return $this->render('task/creation.html.twig', [
+                    'form' => $form->createView(),
+        ]);
+    }
+```
 
 
 
