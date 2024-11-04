@@ -93,4 +93,40 @@ class TaskController extends AbstractController {
            'tasks' => $tasks 
         ]);
     }
+    
+    public function edit(EntityManagerInterface $entityManager, Request $request, Task $task, UserInterface $user): Response {
+        
+        //Comprobar si el user es el dueño de la tarea
+        if(!$user || $user->getId() != $task->getUser()->getId()){
+            return $this->redirectToRoute('tasks');
+        }
+        
+        //CREANDO EL FORMULARIO
+        $form = $this->createForm(TaskType::class, $task);
+        
+        //RELLENAR EL OBJETO CON LOS DATOS DEL FORM
+        $form->handleRequest($request);
+        
+        //COMPROBAR SI EL FORM SE HA EJECUTADO
+        if ($form->isSubmitted() && $form->isValid()) {
+            //MODIFICANDO EL OBJETO
+            
+            //Dando valor al user
+            //$task->setUser($user);
+            
+            //Dando valor a $task->created_at
+            //$task->setCreatedAt(new \DateTime('now'));
+
+            //Guardar la Tarea
+            $entityManager->persist($task); //Invocar doctrine para que guarde el objeto
+            $entityManager->flush(); //Ejecutar orden para que doctrine guarde el objeto
+
+            return $this->redirect($this->generateUrl('task_detail', ['id' => $task->getId()]));
+        }
+        
+        return $this->render('task/creation.html.twig',[
+            'edit' => true,
+            'form' => $form->createView()
+        ]);
+    }
 }

@@ -1058,7 +1058,7 @@ my-tasks:
 ```
 Finalmente tomamos la tabla del index.html.twig y la pasamos a una nueva vista en template/includes/include.html.twig para reutilizar código en las otras plantillas mediante la cláusula: **{{ include('includes/task-list.html.twig') }}**
 ```html
-{% if tasks|lenght >=1 %}
+{% if tasks|length >=1 %}
 <table>
     <tr>
         <th>Tarea</th>
@@ -1096,8 +1096,77 @@ Finalmente tomamos la tabla del index.html.twig y la pasamos a una nueva vista e
 
 ## Clase 484
 ### Edición de Tareas
+Creamos método nuevo en TaskController:
+```html
+    public function edit(EntityManagerInterface $entityManager, Request $request, Task $task, UserInterface $user): Response {
+        
+        //Comprobar si el user es el dueño de la tarea
+        if(!$user || $user->getId() != $task->getUser()->getId()){
+            return $this->redirectToRoute('tasks');
+        }
+        
+        //CREANDO EL FORMULARIO
+        $form = $this->createForm(TaskType::class, $task);
+        
+        //RELLENAR EL OBJETO CON LOS DATOS DEL FORM
+        $form->handleRequest($request);
+        
+        //COMPROBAR SI EL FORM SE HA EJECUTADO
+        if ($form->isSubmitted() && $form->isValid()) {
 
+            //Guardar la Tarea
+            $entityManager->persist($task); //Invocar doctrine para que guarde el objeto
+            $entityManager->flush(); //Ejecutar orden para que doctrine guarde el objeto
 
+            return $this->redirect($this->generateUrl('task_detail', ['id' => $task->getId()]));
+        }
+        
+        return $this->render('task/creation.html.twig',[
+            'edit' => true,
+            'form' => $form->createView()
+        ]);
+```
+Creamos la ruta:
+```html
+task_edit:
+    path: /editar-tarea/{id}
+    controller: App\Controller\TaskController::edit
+```
+Vinculamos el enlace Editar de task-list.html.twig a la ruta:
+```html
+<a href="{{ path('task_edit', {'id':task.id}) }}" class="edit">Editar</a>
+```
+Y en la Vista creation.html.twig hacemos una serie de modificaciones:
+```html
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if edit is defined %}
+        Editar Tarea
+    {% else %}
+        Crear Tarea
+    {%endif %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="example-wrapper">
+        <h2>
+            {% if edit is defined %}
+                Editar Tarea
+            {% else %}
+                Crear Tarea
+            {%endif %}
+        </h2>
+        {{ form_start(form) }}
+        {{ form_widget(form)}}
+        {{ form_end(form)}}
+    </div>
+{% endblock %}
+```
+
+## Clase 485
+### Borrador de Tareas
 
 
 

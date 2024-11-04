@@ -1,4 +1,4 @@
-{% if tasks|lenght >=1 %}
+{% if tasks|length >=1 %}
 <table>
     <tr>
         <th>Tarea</th>
@@ -23,7 +23,7 @@
             <td>{{ task.hours }}</td>
             <td class="buttons"> 
                 <a href="{{ path('task_detail', {'id':task.id}) }}" class="see">Ver</a>
-                <a href="" class="edit">Editar</a>
+                <a href="{{ path('task_edit', {'id':task.id}) }}" class="edit">Editar</a>
                 <a href="" class="delete">Borrar</a>
             </td>
         </tr>
