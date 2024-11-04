@@ -10,6 +10,7 @@ use App\Entity\Task;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\TaskType;
+use \Symfony\Component\Security\Core\User\UserInterface;
 
 class TaskController extends AbstractController {
 
@@ -52,7 +53,7 @@ class TaskController extends AbstractController {
         ]);
     }
     
-    public function creation(EntityManagerInterface $entityManager, Request $request, \Symfony\Component\Security\Core\User\UserInterface $user): Response  {
+    public function creation(EntityManagerInterface $entityManager, Request $request, UserInterface $user): Response  {
         
         //CREANDO EL FORMULARIO
         $task = new Task();
@@ -83,6 +84,13 @@ class TaskController extends AbstractController {
         
         return $this->render('task/creation.html.twig', [
                     'form' => $form->createView(),
+        ]);
+    }
+    
+    public function myTasks(UserInterface $user) {
+        $tasks = $user->getTasks();
+        return $this->render('task/my_tasks.html.twig', [
+           'tasks' => $tasks 
         ]);
     }
 }

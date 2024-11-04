@@ -20,9 +20,9 @@ class TaskType extends AbstractType{
                 -> add('priority', ChoiceType::class, array(
             'label' => 'Prioridad',
             'choices' => array(
-                'Alta' => 'high',
-                'Media' => 'medium',
-                'Baja' => 'low',
+                'Alta' => 'High',
+                'Media' => 'Medium',
+                'Baja' => 'Low',
             )
         ))
                 -> add('hours', TextType::class, array(

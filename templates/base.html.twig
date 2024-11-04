@@ -19,7 +19,7 @@
                 <ul id="menu">
                         {% if app.user %}
                         <li><a href="{{ path('tasks') }}">Inicio</a></li>
-                        <li><a href="">Mis Tareas</a></li>
+                        <li><a href="{{ path('my_tasks') }}">Mis Tareas</a></li>
                         <li><a href="{{ path('task_creation') }}">Crear Tarea</a></li>
                         <li class="right"><a href="{{ path('logout') }}">Cerrar Sesión</a></li>
                         <li class="right"><a href="">{{ app.user.name ~' '~ app.user.surname}}</a></li>

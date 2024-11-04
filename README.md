@@ -1032,8 +1032,70 @@ Para solucionar el error de los botones solapados al escribir títulos muy largo
 ```
 
 ## Clase 483
-### 
+### Mis Tareas
+- Creamos una nueva acción en el TaskController (myTasks):
+```html
+use \Symfony\Component\Security\Core\User\UserInterface;
 
+//...
+
+    public function myTasks(UserInterface $user) {
+        $tasks = $user->getTasks();
+        return $this->render('task/my-tasks.html.twig', [
+           'tasks' => $tasks 
+        ]);
+    }
+```
+- Creamos la ruta
+```html
+my-tasks:
+    path: /mis-tareas
+    controller: App\Controller\TaskController::myTasks
+```
+- Añadimos dicha ruta a base.hmtl.twig
+```html
+<li><a href="{{ path('my-tasks') }}">Mis Tareas</a></li>
+```
+Finalmente tomamos la tabla del index.html.twig y la pasamos a una nueva vista en template/includes/include.html.twig para reutilizar código en las otras plantillas mediante la cláusula: **{{ include('includes/task-list.html.twig') }}**
+```html
+{% if tasks|lenght >=1 %}
+<table>
+    <tr>
+        <th>Tarea</th>
+        <th>Prioridad</th>
+        <th>Horas aprox.</th>
+        <th>Acciones</th>
+    </tr>
+    {% for task in tasks %}
+        <tr>
+            <td>{{ task.title }}</td>
+            <td>
+                {% if task.priority == 'High' %}
+                    {{ 'Alta' }}
+                {% endif %}
+                {% if task.priority == 'Medium' %}
+                    {{ 'Media' }}
+                {% endif %}
+                {% if task.priority == 'Low' %}
+                    {{ 'Baja' }}
+                {% endif %}
+            </td>
+            <td>{{ task.hours }}</td>
+            <td class="buttons"> 
+                <a href="{{ path('task_detail', {'id':task.id}) }}" class="see">Ver</a>
+                <a href="" class="edit">Editar</a>
+                <a href="" class="delete">Borrar</a>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+{% else %}
+    <strong>No hay Tareas disponibles en este momento</strong>
+{% endif %}
+```
+
+## Clase 484
+### Edición de Tareas
 
 
 
