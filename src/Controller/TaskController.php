@@ -24,7 +24,6 @@ class TaskController extends AbstractController {
 //            foreach($tasks as $task){
 //                echo $task->getUser()->getName().": ".$task->getTitle()."<br/>";
 //            }
-        
 //Segunda Prueba de Entidades y relaciones       
 //        $user_repo = $entityManager->getRepository(User::class);
 //        $users = $user_repo->findAll();
@@ -37,41 +36,40 @@ class TaskController extends AbstractController {
 //        }
 
         $task_repo = $entityManager->getRepository(Task::class);
-        $tasks = $task_repo->findBy([],['id' => 'DESC']);
+        $tasks = $task_repo->findBy([], ['id' => 'DESC']);
         return $this->render('task/index.html.twig', [
                     'tasks' => $tasks,
-        ]);   
-    }
-    
-    public function detail(Task $task) {
-        if(!$task){
-            return $this->redirectToRoute('tasks');
-        }
-        
-        return $this->render('task/detail.html.twig',[
-            'task' => $task
         ]);
     }
-    
-    public function creation(EntityManagerInterface $entityManager, Request $request, UserInterface $user): Response  {
-        
+
+    public function detail(Task $task) {
+        if (!$task) {
+            return $this->redirectToRoute('tasks');
+        }
+
+        return $this->render('task/detail.html.twig', [
+                    'task' => $task
+        ]);
+    }
+
+    public function creation(EntityManagerInterface $entityManager, Request $request, UserInterface $user): Response {
+
         //CREANDO EL FORMULARIO
         $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
-        
+
         //RELLENAR EL OBJETO CON LOS DATOS DEL FORM
         $form->handleRequest($request);
-        
+
         //COMPROBAR SI EL FORM SE HA EJECUTADO
         if ($form->isSubmitted() && $form->isValid()) {
             dump($task);
             dump($user);
-            
+
             //MODIFICANDO EL OBJETO
-            
             //Dando valor al user
             $task->setUser($user);
-            
+
             //Dando valor a $task->created_at
             $task->setCreatedAt(new \DateTime('now'));
 
@@ -81,52 +79,68 @@ class TaskController extends AbstractController {
 
             return $this->redirect($this->generateUrl('task_detail', ['id' => $task->getId()]));
         }
-        
+
         return $this->render('task/creation.html.twig', [
                     'form' => $form->createView(),
         ]);
     }
-    
+
     public function myTasks(UserInterface $user) {
         $tasks = $user->getTasks();
         return $this->render('task/my_tasks.html.twig', [
-           'tasks' => $tasks 
+                    'tasks' => $tasks
         ]);
     }
-    
+
     public function edit(EntityManagerInterface $entityManager, Request $request, Task $task, UserInterface $user): Response {
-        
+
         //Comprobar si el user es el dueño de la tarea
-        if(!$user || $user->getId() != $task->getUser()->getId()){
+        if (!$user || $user->getId() != $task->getUser()->getId()) {
             return $this->redirectToRoute('tasks');
         }
-        
+
         //CREANDO EL FORMULARIO
         $form = $this->createForm(TaskType::class, $task);
-        
+
         //RELLENAR EL OBJETO CON LOS DATOS DEL FORM
         $form->handleRequest($request);
-        
+
         //COMPROBAR SI EL FORM SE HA EJECUTADO
         if ($form->isSubmitted() && $form->isValid()) {
             //MODIFICANDO EL OBJETO
-            
             //Dando valor al user
             //$task->setUser($user);
-            
             //Dando valor a $task->created_at
             //$task->setCreatedAt(new \DateTime('now'));
-
             //Guardar la Tarea
             $entityManager->persist($task); //Invocar doctrine para que guarde el objeto
             $entityManager->flush(); //Ejecutar orden para que doctrine guarde el objeto
 
             return $this->redirect($this->generateUrl('task_detail', ['id' => $task->getId()]));
         }
-        
-        return $this->render('task/creation.html.twig',[
-            'edit' => true,
-            'form' => $form->createView()
+
+        return $this->render('task/creation.html.twig', [
+                    'edit' => true,
+                    'form' => $form->createView()
         ]);
+    }
+
+    public function delete(EntityManagerInterface $entityManager, Task $task, Request $request, UserInterface $user): Response {
+        //Comprobar si el user es el dueño de la tarea
+        if (!$user || $user->getId() != $task->getUser()->getId()) {
+            return $this->redirectToRoute('tasks');
+        }
+
+        //Comprobar que el objeto existe
+        if (!$task) {
+            return $this->redirectToRoute('tasks');
+        }
+
+        //Eliminamos de doctrine - de la memoria de objetos en la caché 
+        $entityManager->remove($task);
+        //Ejecutamos el delete de la BBDD
+        $entityManager->flush();
+        
+        return $this->redirectToRoute('tasks');
     }
 }

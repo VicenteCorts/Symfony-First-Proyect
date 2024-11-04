@@ -1167,12 +1167,47 @@ Y en la Vista creation.html.twig hacemos una serie de modificaciones:
 
 ## Clase 485
 ### Borrador de Tareas
+Cambiamos la visibilidad del boton "Borrar" solo para aquellos usuarios dueños de las tareas:
+```html
+{% if app.user !=null AND app.user.id == task.user.id %}
+	<a href="{{ path('task_edit', {'id':task.id}) }}" class="edit">Editar</a>
+	<a href="{{ path('task_delete', {'id':task.id}) }}" class="delete">Borrar</a>
+{% endif %}
+```
+Creamos método nuevo en TaskController:
+```html
+    public function delete(EntityManagerInterface $entityManager, Task $task, Request $request, UserInterface $user): Response {
+        //Comprobar si el user es el dueño de la tarea
+        if (!$user || $user->getId() != $task->getUser()->getId()) {
+            return $this->redirectToRoute('tasks');
+        }
 
+        //Comprobar que el objeto existe
+        if (!$task) {
+            return $this->redirectToRoute('tasks');
+        }
 
+        //Eliminamos de doctrine - de la memoria de objetos en la caché 
+        $entityManager->remove($task);
+        //Ejecutamos el delete de la BBDD
+        $entityManager->flush();
+        
+        return $this->redirectToRoute('tasks');
+    }
+```
+Creamos la ruta:
+```html
+task_delete:
+    path: /tarea/delete/{id}
+    controller: App\Controller\TaskController::delete
+```
+Vinculamos el enlace Editar de task-list.html.twig a la ruta:
+```html
+<a href="{{ path('task_delete', {'id':task.id}) }}" class="delete">Borrar</a>
+```
 
-
-
-
+## Clase 486
+### Control de Acceso
 
 
 
