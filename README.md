@@ -1169,7 +1169,7 @@ Y en la Vista creation.html.twig hacemos una serie de modificaciones:
 ### Borrador de Tareas
 Cambiamos la visibilidad del boton "Borrar" solo para aquellos usuarios dueños de las tareas:
 ```html
-{% if app.user !=null AND app.user.id == task.user.id %}
+{% if app.user !=null and app.user.id == task.user.id %}
 	<a href="{{ path('task_edit', {'id':task.id}) }}" class="edit">Editar</a>
 	<a href="{{ path('task_delete', {'id':task.id}) }}" class="delete">Borrar</a>
 {% endif %}
@@ -1208,6 +1208,17 @@ Vinculamos el enlace Editar de task-list.html.twig a la ruta:
 
 ## Clase 486
 ### Control de Acceso
+https://symfony.com/doc/6.4/security/access_control.html#1-matching-options
+
+## FIN
+Pero queda incompleto, urls amigables, SEO, enviar correo a los usuarios para el registro, etc.
+
+
+
+
+
+
+
 
 
 
