@@ -1212,23 +1212,3 @@ https://symfony.com/doc/6.4/security/access_control.html#1-matching-options
 
 ## FIN
 Pero queda incompleto, urls amigables, SEO, enviar correo a los usuarios para el registro, etc.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
